@@ -17,6 +17,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 allowed_roles = config['roles']
 mc_server_channel_ids = config['channels']['mc_servers']
 staff_channel_id = config['channels']['staff']
+timeout_value = config['channels']['timeout']
 
 startup_time = int(time.time())
 
@@ -47,7 +48,7 @@ async def run_command(ctx, mc_user: str, command: str, reason: str = None):
         try:
             def check(message):
                 return ('nothing changed' in message.content.lower() or ('banned' in message.content.lower() and mc_user.lower()))
-            await bot.wait_for('message', check=check, timeout=1.0)
+            await bot.wait_for('message', check=check, timeout=timeout_value)
             success.append(True)
         except asyncio.TimeoutError:
             failed_channel_mentions.append(channel.mention)

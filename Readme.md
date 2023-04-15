@@ -12,7 +12,9 @@ Along with a `BOT_TOKEN` environment variable set, Sculk needs a `config.json5` 
       91234567, // Channel name
       87654321  // Channel name
     ],
-    "staff": 567345678
+    "staff": 567345678,
+    // How long to wait for a response from mc_servers
+    "timeout": 2.0
   },
   "roles": [
     898760987, // OP
