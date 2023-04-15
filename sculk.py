@@ -20,6 +20,19 @@ staff_channel_id = config['channels']['staff']
 
 startup_time = int(time.time())
 
+def print_time_diff(time_diff):
+    if time_diff < 60:
+        return f"{time_diff} seconds"
+    elif time_diff < 3600:
+        return f"{time_diff//60} minutes and {time_diff%60} seconds"
+    elif time_diff < 86400:
+        return f"{time_diff//3600} hours and {(time_diff%3600)//60} minutes"
+    elif time_diff < 604800:
+        return f"{time_diff//86400} days and {(time_diff%86400)//3600} hours"
+    else:
+        return f"{time_diff//604800} weeks and {(time_diff%604800)//86400} days"
+
+
 async def run_command(ctx, mc_user: str, command: str, reason: str = None):
     success = []  # Keep track of whether each channel's ban was successful
     failed_channel_mentions = [] # Keep track of the mentions of failed channels
@@ -90,6 +103,8 @@ async def console(ctx, action: str = None, mc_user: str = None, *, reason: str =
 @commands.has_any_role(*allowed_roles)
 @commands.check(lambda ctx: ctx.channel.id == staff_channel_id)
 async def uptime(ctx):
-    await ctx.send(f'I\'ve been running since <t:{startup_time}:R>')
+    current_time = int(time.time())
+    time_diff = current_time - startup_time
+    await ctx.send(f"I've been running for `{print_time_diff(time_diff)}`")
 
 bot.run(bot_token)
