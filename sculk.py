@@ -2,13 +2,13 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
-import json
+import pyjson5
 import time
 
 bot_token = os.environ.get("BOT_TOKEN")
 
-with open('config.json', 'r') as f:
-    config = json.load(f)
+with open('config.json5', 'r') as f:
+    config = pyjson5.load(f)
 
 intents = discord.Intents.all()
 intents.members = True

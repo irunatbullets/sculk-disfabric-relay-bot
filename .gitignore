@@ -131,4 +131,4 @@ dmypy.json
 .pyre/
 
 # configs
-config**.json
+config**.json*
