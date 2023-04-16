@@ -1,5 +1,13 @@
 # Sculk
 
+Sculk is a discord bot that is designed to interact with my version of DisFabric. It currently supports three commands.
+
+- `!uptime` will let you know how long sculk has been running.
+- `!console ban <mc username> <reason>`
+- `!console pardon <mc username>`
+
+Upon reading the `!console` commands from a staff channel, sculk will relay the commands to any defined Minecraft server channel and then report the result back to the staff channel.
+
 ## Setup
 
 Along with a `BOT_TOKEN` environment variable set, Sculk needs a `config.json5` file which contains the following (note the comments, which make this file a bit easier to maintain when you have lots of minecraft servers):
@@ -22,3 +30,9 @@ Along with a `BOT_TOKEN` environment variable set, Sculk needs a `config.json5` 
   ]
 }
 ```
+## Features coming soon (if they're useful)
+
+- Add and remove mc_server channels from the staff channel using `!server add <channel id>`
+- `!whois <discord id|mc username>` to see the relationship between discord and Minecraft accounts, which can be useful for banning or investigating teams of griefers.
+
+(Actual commands TBD)
