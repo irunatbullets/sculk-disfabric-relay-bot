@@ -2,13 +2,18 @@ import discord
 from discord.ext import commands
 import asyncio
 import os
-import pyjson5
+import json5
 import time
 
 bot_token = os.environ.get("BOT_TOKEN")
 
-with open('config.json5', 'r') as f:
-    config = pyjson5.load(f)
+with open('config.json5', 'r') as file:
+    file_content = file.read()
+
+try:
+    config = json5.loads(file_content)
+except json5.JSONDecodeError as e:
+    print(f"JSON5 decodeing error {e}")
 
 intents = discord.Intents.all()
 intents.members = True
@@ -107,5 +112,36 @@ async def uptime(ctx):
     current_time = int(time.time())
     time_diff = current_time - startup_time
     await ctx.send(f"I've been running for `{print_time_diff(time_diff)}`")
+
+@bot.command()
+@commands.has_any_role(*allowed_roles)
+@commands.check(lambda ctx: ctx.channel.id == staff_channel_id)
+async def channel(ctx, action: str = None, channel_id: int = None):
+    if not action or not channel_id:
+        await ctx.send('Invalid arguments. Usage is `!channel add channel_id` or `!channel remove channel_id`.')
+        return
+
+    # Read the contents of the file and load the data into 'config'
+    with open('config.json5', 'r') as file:
+        config = json5.load(file)
+
+    if action == 'add':
+        if channel_id not in config['channels']['mc_servers']:
+            config['channels']['mc_servers'].append(channel_id)
+            with open('config.json5', 'w') as f:
+                f.write(json5.dumps(config, indent=2))  # Write the modified JSON5 content to the file
+            await ctx.send(f"Channel {channel_id} added successfully.")
+        else:
+            await ctx.send(f"Channel {channel_id} is already in the list.")
+    elif action == 'remove':
+        if channel_id in config['channels']['mc_servers']:
+            config['channels']['mc_servers'].remove(channel_id)
+            with open('config.json5', 'w') as f:
+                f.write(json5.dumps(config, indent=2))  # Write the modified JSON5 content to the file
+            await ctx.send(f"Channel {channel_id} removed successfully.")
+        else:
+            await ctx.send(f"Channel {channel_id} is not in the list.")
+    else:
+        await ctx.send('Invalid action. Use `add` or `remove`.')
 
 bot.run(bot_token)
