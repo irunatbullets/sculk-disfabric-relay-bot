@@ -52,7 +52,7 @@ async def run_command(ctx, mc_user: str, command: str, reason: str = None):
             await channel.send(f'!console {command} {mc_user}')
         try:
             def check(message):
-                return ('nothing changed' in message.content.lower() or ('banned' in message.content.lower() and mc_user.lower()))
+                return ('this player' in message.content.lower() or 'nothing changed' in message.content.lower() or ('banned' in message.content.lower() and mc_user.lower()))
             await bot.wait_for('message', check=check, timeout=timeout_value)
             success.append(True)
         except asyncio.TimeoutError:
