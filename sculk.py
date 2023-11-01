@@ -116,10 +116,12 @@ async def uptime(ctx):
 @bot.command()
 @commands.has_any_role(*allowed_roles)
 @commands.check(lambda ctx: ctx.channel.id == staff_channel_id)
-async def channel(ctx, action: str = None, channel_id: int = None):
-    if not action or not channel_id:
+async def channel(ctx, action: str = None, channel_id: str = None):
+    if not action or not channel_id or not channel_id.isdigit():
         await ctx.send('Invalid arguments. Usage is `!channel add channel_id` or `!channel remove channel_id`.')
         return
+
+    channel_id = int(channel_id)
 
     # Read the contents of the file and load the data into 'config'
     with open('config.json5', 'r') as file:
@@ -130,17 +132,17 @@ async def channel(ctx, action: str = None, channel_id: int = None):
             config['channels']['mc_servers'].append(channel_id)
             with open('config.json5', 'w') as f:
                 f.write(json5.dumps(config, indent=2))  # Write the modified JSON5 content to the file
-            await ctx.send(f"Channel {channel_id} added successfully.")
+            await ctx.send(f"Channel <#{channel_id}> added successfully.")
         else:
-            await ctx.send(f"Channel {channel_id} is already in the list.")
+            await ctx.send(f"Channel <#{channel_id}> is already in the list.")
     elif action == 'remove':
         if channel_id in config['channels']['mc_servers']:
             config['channels']['mc_servers'].remove(channel_id)
             with open('config.json5', 'w') as f:
                 f.write(json5.dumps(config, indent=2))  # Write the modified JSON5 content to the file
-            await ctx.send(f"Channel {channel_id} removed successfully.")
+            await ctx.send(f"Channel <#{channel_id}> removed successfully.")
         else:
-            await ctx.send(f"Channel {channel_id} is not in the list.")
+            await ctx.send(f"Channel <#{channel_id}> is not in the list.")
     else:
         await ctx.send('Invalid action. Use `add` or `remove`.')
 
