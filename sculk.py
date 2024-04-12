@@ -25,7 +25,6 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 allowed_roles = config["roles"]
-mc_server_channel_ids = config["channels"]["mc_servers"]
 staff_channel_id = config["channels"]["staff"]
 timeout_value = config["channels"]["timeout"]
 
@@ -49,7 +48,9 @@ async def run_command(ctx, mc_user: str, command: str, reason: str = None):
     success = []  # Keep track of whether each channel's ban was successful
     failed_channel_mentions = []  # Keep track of the mentions of failed channels
 
-    for channel_id in mc_server_channel_ids:
+    config = load_config()
+
+    for channel_id in config["channels"]["mc_servers"]:
         channel = bot.get_channel(channel_id)
 
         if reason and command != "pardon":
