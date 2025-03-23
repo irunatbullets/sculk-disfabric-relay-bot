@@ -39,8 +39,30 @@ Along with a `BOT_TOKEN` environment variable set, Sculk needs a `config.json5` 
   ]
 }
 ```
-## Features coming soon (if they're useful)
 
-- `!whois <discord id|mc username>` to see the relationship between discord and Minecraft accounts, which can be useful for banning or investigating teams of griefers.
+I create a service in `/etc/systemd/system/sculk.service` like:
 
-(Actual commands TBD)
+```
+[Unit]
+Description=Sculk
+After=network.target
+
+[Service]
+Type=simple
+User=murray
+WorkingDirectory=/path/to/sculk-disfabric-relay-bot/
+ExecStart=/usr/bin/python3 /path/to/sculk-disfabric-relay-bot/sculk.py
+Restart=always
+Environment="BOT_TOKEN=<paste your bot token here>"
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then I run the following to make sure it runs at startup.
+
+```
+sudo systemctl start sculk.service
+sudo systemctl enable sculk.service
+```
+ 
